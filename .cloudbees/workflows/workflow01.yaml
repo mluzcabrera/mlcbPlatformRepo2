@@ -13,3 +13,6 @@ jobs:
           git config --global --add safe.directory /cloudbees/workspace
       - name: checkout
         uses: cloudbees-io/checkout@v1
+      - uses: docker://alpine/git:latest
+        run: |
+          ls
