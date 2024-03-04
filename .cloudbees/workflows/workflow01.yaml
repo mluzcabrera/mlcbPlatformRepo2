@@ -10,8 +10,23 @@ on:
 jobs:
   build:
     steps:
-      - name: Say hello
-        uses: docker://golang:1.20.3-alpine3.17
-        shell: sh
-        run: |
-          echo "hello world"
+      - name: Check out repo
+        uses: cloudbees-io/checkout@v1
+        with:
+          provider: ${{ cloudbees.scm.provider }}
+          repository: ${{ cloudbees.repository }}
+          ref: ''
+          token: ${{ cloudbees.scm.token }}
+          ssh-key: ''
+          ssh-known-hosts: ''
+          ssh-strict: true
+          persist-credentials: true
+          path: ''
+          clean: true
+          fetch-depth: 1
+          lfs: false
+          submodules: false
+          set-safe-directory: true
+          github-server-url: ''
+          bitbucket-server-url: ''
+          gitlab-server-url: ''
