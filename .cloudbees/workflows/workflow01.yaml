@@ -8,7 +8,7 @@ on:
 jobs:
   opt1:
     env:
-      deploy: "true"
+      deploy: "false"
     steps:
       - uses: docker://kiwigrid/gcloud-kubectl-helm:latest
         if: ${{ env.deploy == 'true'}}
@@ -31,7 +31,9 @@ jobs:
           gcloud auth login --cred-file=${HOME}/.kube/config.json 
           gcloud config set project mlcbplatformproject
           gcloud container clusters get-credentials mlcb-platform-cluster-ap002 --region us-east1 --project mlcbplatformproject 
-          helm install what-the-helm what-the-helm/ --wait          
+          helm install what-the-helm what-the-helm/ --wait
+          export SERVICE_IP=$(kubectl get svc --namespace default what-the-helm --template "{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}")  
+          echo http://$SERVICE_IP:80          
       - uses: docker://kiwigrid/gcloud-kubectl-helm:latest
         if: ${{ env.deploy != 'true'}}
         name: Google Cloud authentication and HELM uninstall
