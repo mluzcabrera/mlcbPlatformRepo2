@@ -1,32 +1,45 @@
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
 name: My workflow
-
 on:
   push:
     branches:
-      - '**'
-
+      - "**"
 jobs:
+  opt1:
+    steps:
+      - uses: docker://alpine/git:latest
+        run: |
+          git config --global --add safe.directory /cloudbees/workspace
+      - name: checkout
+        uses: cloudbees-io/checkout@v1
   build:
     steps:
+      - name: Git global credentials
+        uses: cloudbees-io/configure-git-global-credentials@v1
+        with:
+          token: ${{ secrets.MY_TOKEN }}
+          repositories: |
+            example/foo
+            example/bar
       - name: Check out repo
         uses: cloudbees-io/checkout@v1
         with:
           provider: ${{ cloudbees.scm.provider }}
           repository: ${{ cloudbees.repository }}
-          ref: ''
+          ref: ""
           token: ${{ cloudbees.scm.token }}
-          ssh-key: ''
-          ssh-known-hosts: ''
+          ssh-key: ""
+          ssh-known-hosts: ""
           ssh-strict: true
           persist-credentials: true
-          path: ''
+          path: ""
           clean: true
           fetch-depth: 1
           lfs: false
           submodules: false
           set-safe-directory: true
-          github-server-url: ''
-          bitbucket-server-url: ''
-          gitlab-server-url: ''
+          github-server-url: ""
+          bitbucket-server-url: ""
+          gitlab-server-url: ""
+    needs: opt1
