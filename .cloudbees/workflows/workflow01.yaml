@@ -8,7 +8,7 @@ on:
 jobs:
   opt1:
     env:
-      deploy: "false"
+      deploy: "true"
     steps:
       - uses: docker://kiwigrid/gcloud-kubectl-helm:latest
         if: ${{ env.deploy == 'true'}}
